@@ -1,5 +1,9 @@
 package com.codepath.daggerexample;
 
+import com.codepath.daggerexample.network.interfaces.GitHubApiInterface;
+import com.squareup.okhttp.OkHttpClient;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,7 +13,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import javax.inject.Inject;
+
 public class MainActivity extends AppCompatActivity {
+
+    @Inject
+    GitHubApiInterface mGitHubApiInterface;
+
+    @Inject
+    SharedPreferences mSharedPreferences;
+
+    @Inject
+    OkHttpClient mOkHttpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ((MyApp) getApplication()).getNetComponent().inject(this);
+        ((MyApp) getApplication()).getGitHubComponent().inject(this);
 
     }
 

@@ -1,13 +1,15 @@
 package com.codepath.daggerexample;
 
-import com.codepath.daggerexample.di.components.AppComponent;
+import com.codepath.daggerexample.di.components.DaggerNetComponent;
+import com.codepath.daggerexample.di.components.NetComponent;
+import com.codepath.daggerexample.di.modules.AppModule;
 import com.codepath.daggerexample.di.modules.NetModule;
 
 import android.app.Application;
 
 public class MyApp extends Application {
 
-    private AppComponent mAppComponent;
+    private NetComponent mNetComponent;
 
     @Override
     public void onCreate() {
@@ -15,13 +17,14 @@ public class MyApp extends Application {
 
         // specify the full namespace of the component
         // Dagger_xxxx (where xxxx = component name)
-        mAppComponent = com.codepath.daggerexample.di.components.DaggerAppComponent.builder()
+        mNetComponent = DaggerNetComponent.builder()
+                .appModule(new AppModule(this))
                 .netModule(new NetModule("https://api.github.com"))
                 .build();
 
     }
 
-    public AppComponent getAppComponent() {
-        return mAppComponent;
+    public NetComponent getNetComponent() {
+        return mNetComponent;
     }
 }

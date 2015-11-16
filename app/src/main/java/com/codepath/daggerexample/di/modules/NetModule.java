@@ -4,7 +4,10 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
+
+import android.app.Application;
 
 import javax.inject.Singleton;
 
@@ -22,6 +25,15 @@ public class NetModule {
         this.mBaseUrl = baseUrl;
     }
 
+    @Provides
+    @Singleton
+    Cache provideOkHttpCache(Application application) {
+        int cacheSize = 10 * 1024 * 1024; // 10 MiB
+        Cache cache = new Cache(application.getCacheDir(), cacheSize);
+        return cache;
+    }
+
+
     @Provides  // Dagger will only look for methods annotated with @Provides
     @Singleton
     Gson provideGson() {
@@ -32,8 +44,10 @@ public class NetModule {
 
     @Provides
     @Singleton
-    OkHttpClient provideOkHttpClient() {
-        return new OkHttpClient();
+    OkHttpClient provideOkHttpClient(Cache cache) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setCache(cache);
+        return okHttpClient;
     }
 
     @Provides

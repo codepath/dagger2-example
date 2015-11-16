@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ((MyApp) getApplication()).getNetComponent().inject(this);
+
     }
 
     @Override

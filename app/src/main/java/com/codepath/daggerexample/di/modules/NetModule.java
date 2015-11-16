@@ -18,6 +18,10 @@ public class NetModule {
 
     String mBaseUrl;
 
+    public NetModule(String baseUrl) {
+        this.mBaseUrl = baseUrl;
+    }
+
     @Provides  // Dagger will only look for methods annotated with @Provides
     @Singleton
     Gson provideGson() {

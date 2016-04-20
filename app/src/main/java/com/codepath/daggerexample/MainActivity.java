@@ -1,30 +1,32 @@
 package com.codepath.daggerexample;
 
-import com.codepath.daggerexample.network.interfaces.GitHubApiInterface;
-import com.squareup.okhttp.OkHttpClient;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.codepath.daggerexample.network.GitHubApi;
+
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity {
+import retrofit.Retrofit;
 
-    @Inject
-    GitHubApiInterface mGitHubApiInterface;
+public class MainActivity extends AppCompatActivity {
 
     @Inject
     SharedPreferences mSharedPreferences;
 
     @Inject
-    OkHttpClient mOkHttpClient;
+    Retrofit mRetrofit;
+
+    private GitHubApi mGitHubApi;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +38,25 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(final View view) {
+                mGitHubApi.getRepos("codepath", new GitHubApi.ResponseHandler() {
+                    @Override
+                    public void onResponse(Object data) {
+                        Log.i("(MainActivity.java:45)",data.toString());
+                        Snackbar.make(view,"Data retrieved", Snackbar.LENGTH_LONG)
+                                .setAction("Action",null).show();
+                    }
+
+                    @Override
+                    public void onFailure() {
+
+                    }
+                });
             }
         });
 
         ((MyApp) getApplication()).getGitHubComponent().inject(this);
-
+        mGitHubApi = new GitHubApi(mRetrofit);
     }
 
     @Override

@@ -9,7 +9,7 @@ import retrofit.http.GET;
 import retrofit.http.Path;
 
 public interface GitHubApiInterface {
-    @GET("/org/{orgName}/repos")
-    Call<ArrayList<Repository>> getRepository(@Path("orgName") String orgName);
+    @GET("/users/{user}/repos")
+    Call<ArrayList<Repository>> getRepository(@Path("user") String userName);
 
 }
